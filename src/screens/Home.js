@@ -72,7 +72,7 @@ export default function Home({ navigation }) {
           <Temperature location="냉장실" temp="2"></Temperature>
           <Temperature location="냉동실" temp="-20"></Temperature>
         </Temp_Container>
-        <Sub>냉장고를 클릭하시면 더 자세히 내용물을 확인하 실수 있습니다.</Sub>
+        <Sub>냉장고를 클릭하시면 더 자세히 내용물을 확인하실 수 있습니다.</Sub>
       </Body>
       <StatusBar style="auto" />
     </Container>
