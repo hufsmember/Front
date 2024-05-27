@@ -24,7 +24,7 @@ const Buttons = styled.View`
 export default function MainOpen({ navigation }) {
   return (
     <Container>
-      <OpenFr />
+      <OpenFr fromnavigate={navigation} />
       <Buttons>
         <SeeAllButton>식재료 전체 보기</SeeAllButton>
         <SeeAllButton _onPress={() => navigation.goBack()}>닫기</SeeAllButton>
