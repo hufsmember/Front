@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StatusBar, Dimensions, TouchableOpacity, Button } from "react-native";
+import { StatusBar, View, TouchableOpacity, Button } from "react-native";
 import styled, { ThemeProvider } from "styled-components/native";
 import { theme } from "../theme";
 import freezer from "../../image/main_freezer.jpeg";
@@ -8,16 +8,20 @@ import Temperature from "../components/temperature";
 import { AntDesign } from "@expo/vector-icons";
 import Navigation from "../navigations";
 import MainOpen from "./MainOpen";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+AntDesign.loadFont();
 
 const Container = styled.View`
   flex: 1;
-  align-items: flex-start;
-  padding: 0px 29px 136px 29px;
+  align-items: center;
   justify-content: center;
   /* gap: 35px; */
   flex-direction: column;
   background-color: #ffffff;
-  padding-top: 30px;
+  /* padding-top: 30px; */
 `;
 const Title = styled.Text`
   font-size: 24px;
@@ -57,12 +61,20 @@ const MyFamily = styled.TouchableOpacity`
 `;
 
 export default function Home({ navigation }) {
+  const insets = useSafeAreaInsets();
   return (
-    <Container>
-      <MyFamily>
+    <Container
+      style={{
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+    >
+      {/* <MyFamily>
         <Title>My Family</Title>
         <AntDesign name="right" size={20} color="black" />
-      </MyFamily>
+      </MyFamily> */}
       <Body>
         <Body_image source={freezer} />
         <SeeAllButton _onPress={() => navigation.navigate("MainOpen")}>

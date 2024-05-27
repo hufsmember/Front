@@ -1,7 +1,6 @@
 import React from "react";
-import { TabNav } from "./navigations/Tab";
-import { NavigationContainer } from "@react-navigation/native";
 import Navigation from "./navigations";
+import { StatusBar } from "expo-status-bar";
 
 const App = () => {
   return <Navigation />;
