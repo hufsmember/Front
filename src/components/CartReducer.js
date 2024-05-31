@@ -3,6 +3,7 @@ import { ADD_TO_CART, DELETE_CART, CLEAR_CART } from "./CartActions";
 const initialState = {
   items: {},
   totalAmount: 0,
+  checked: 0,
 };
 
 export default CartReducer = (state = initialState, action) => {

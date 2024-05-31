@@ -69,16 +69,13 @@ const Num = styled.View`
 
 const PopUp = () => {
   const [items, dispatch] = useReducer(CartReducer);
-  const [all, setall] = useState(false);
+  const [all, setall] = useState(0);
+  const [allcheck, setallcheck] = useState(false);
   useEffect(() => {
-    if (items) {
-      if (Object.entries(items).length == sampleData.length) {
-        setall(true);
-      } else {
-        setall(false);
-      }
+    if (all == sampleData.length) {
+      setallcheck(true);
     }
-  });
+  }, all);
   const sampleData = [
     {
       productID: 1,
@@ -121,10 +118,14 @@ const PopUp = () => {
       <CartItem
         name={item.productName}
         price={item.price}
-        _onPress={(check, setcheck) => {
-          handleAddItem(item);
-          setcheck(!check);
+        _onPress={(checked) => {
+          if (checked) {
+            setall(all + 1);
+          } else {
+            setall(all - 1);
+          }
         }}
+        alls={allcheck}
       ></CartItem>
     );
   };
@@ -160,12 +161,21 @@ const PopUp = () => {
           <Head>
             <AllCheck>
               <CheckButton
-                _onPress={() => handleClearItem(items)}
-                alls={all}
+                _onPress={() => {
+                  setallcheck(!allcheck);
+                  if (allcheck) {
+                    setall(sampleData.length);
+                  } else {
+                    setall(0);
+                  }
+                }}
+                alls={allcheck}
               ></CheckButton>
               <Num>
                 <Text>전체선택</Text>
-                <Text>(1/1)</Text>
+                <Text>
+                  ({all}/{sampleData.length})
+                </Text>
               </Num>
             </AllCheck>
             <DeleteItem></DeleteItem>

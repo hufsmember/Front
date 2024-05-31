@@ -10,9 +10,9 @@ import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 
 const Container = styled.TouchableOpacity`
-  background-color: ${({ alls, checked }) =>
+  background-color: ${({ checked, alls }) =>
     alls || checked ? "#063460" : "white"};
-  border-color: ${({ alls, checked }) =>
+  border-color: ${({ checked, alls }) =>
     alls || checked ? "#063460" : "gray"};
   border-width: 1px;
   border-radius: 20px;
@@ -22,9 +22,9 @@ const Container = styled.TouchableOpacity`
   justify-content: center;
 `;
 
-const CheckButton = ({ _onPress, alls = false, checked = false }) => {
+const CheckButton = ({ _onPress, checked, alls = false }) => {
   return (
-    <Container onPress={_onPress} alls={alls} checked={checked}>
+    <Container onPress={_onPress} checked={checked} alls={alls}>
       <AntDesign
         name="check"
         size={15}

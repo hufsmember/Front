@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,
   View,
@@ -59,7 +59,7 @@ const Wrapper = styled.View`
 `;
 
 const Out = styled.TouchableOpacity``;
-const CartItem = ({ name, price, _onPress }) => {
+const CartItem = ({ name, price, _onPress, alls }) => {
   const [checked, setchecked] = useState(false);
   const [fontsLoaded] = useFonts({
     Inter: require("../../assets/fonts/Inter-SemiBold.ttf"),
@@ -73,8 +73,12 @@ const CartItem = ({ name, price, _onPress }) => {
     return (
       <Container>
         <CheckButton
-          _onPress={() => _onPress(checked, setchecked)}
+          _onPress={() => {
+            setchecked(!checked);
+            _onPress(!checked);
+          }}
           checked={checked}
+          alls={alls}
         ></CheckButton>
         <Wrapper>
           <Head>
