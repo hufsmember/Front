@@ -5,6 +5,7 @@ import FoodItems from "../components/FoodItems";
 const Container = styled.View`
   flex: 1;
   background-color: #ffffff;
+  padding-top: 5px;
 `;
 
 const Freezer_upside = ({ navigation }) => {

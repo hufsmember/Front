@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,6 +21,10 @@ const TabIcon = ({ name, size, color }) => {
 const Tab = createBottomTabNavigator();
 
 const TabNav = () => {
+  const [label1, setLabel1] = useState(true);
+  const [label2, setLabel2] = useState(false);
+  const [label3, setLabel3] = useState(false);
+  const [label4, setLabel4] = useState(false);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -29,18 +33,21 @@ const TabNav = () => {
         headerShown: false,
         tabBarLabelStyle: styles.label,
       }}
+      naviga
     >
       <Tab.Screen
         name="Home"
         component={HomeStack}
         options={{
           tabBarIcon: (props) => {
+            setLabel1(props.focused);
             return TabIcon({ ...props, name: "home" });
           },
           tabBarActiveTintColor: "#5B37B7",
           tabBarActiveBackgroundColor: "#DFD7F3",
           tabBarItemStyle: styles.tabItem,
           tabBarLabel: "홈",
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -48,6 +55,7 @@ const TabNav = () => {
         component={CookStack}
         options={{
           tabBarIcon: (props) => {
+            setLabel2(props.focused);
             return TabIcon({ ...props, name: "book" });
           },
           tabBarActiveTintColor: "#C9379D",
@@ -61,6 +69,7 @@ const TabNav = () => {
         component={ShopStack}
         options={{
           tabBarIcon: (props) => {
+            setLabel3(props.focused);
             return TabIcon({
               ...props,
               name: "shopping-bag",
@@ -77,6 +86,7 @@ const TabNav = () => {
         component={CartStack}
         options={{
           tabBarIcon: (props) => {
+            setLabel4(props.focused);
             return TabIcon({
               ...props,
               name: "shopping-cart",
@@ -92,30 +102,32 @@ const TabNav = () => {
   );
 };
 
-const height = Dimensions.get("window").height;
-
 const styles = StyleSheet.create({
   tabBar: {
     width: "100%",
-    height: 90.434,
+    height: 100,
     borderTopRightRadius: 21.9,
     borderTopLeftRadius: 21.9,
     position: "fixed",
     borderTopColor: "#DEE5EF",
-    borderTopWidth: 30,
+    borderTopWidth: 25,
     justifyContent: "center",
     alignItems: "center",
+    padding: 10,
+    paddingBottom: 10,
+    paddingLeft: 5,
   },
   tabItem: {
-    width: 100.173,
+    width: 50,
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    paddingRight: 10,
+    paddingRight: 8,
     paddingLeft: 10,
+    // backgroundColor: "red",
   },
   label: {
-    fontSize: 13,
+    fontSize: 12,
   },
 });
 export default TabNav;

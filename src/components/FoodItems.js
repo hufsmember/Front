@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import styled from "styled-components/native";
 import Item from "./Item";
@@ -13,7 +13,28 @@ const OneList = styled.View`
   justify-content: space-evenly;
 `;
 
+const tempList = [
+  {
+    foodName: "단호박",
+    image: "url",
+  },
+  {
+    foodName: "새우",
+    image: "url",
+  },
+];
+
 const FoodItems = ({ navigation }) => {
+  // const [item, setItem] = useState(null);
+  // const GetItem = async () => {
+  //   try {
+  //     const response = await axios.get("https://example.com/data");
+  //     setItem(response.data);
+  //   } catch (error) {
+  //     console.error("에러발생", error);
+  //   }
+  // };
+  // useEffect(GetItem());
   return (
     <Container>
       <OneList>
