@@ -1,23 +1,29 @@
-import { ADD_TO_CART, DELETE_CART, CLEAR_CART } from "./CartActions";
+import {
+  ADD_TO_CART,
+  DELETE_CART,
+  CLEAR_CART,
+  CHECK_ALL,
+  CHECK,
+} from "./CartActions";
 
 const initialState = {
   items: {},
   totalAmount: 0,
-  checked: 0,
+  allchecked: false,
 };
 
-export default CartReducer = (state = initialState, action) => {
+export default CartReducer = (state, action) => {
   switch (action.type) {
     case ADD_TO_CART:
       const addedProduct = action.product;
       const prodPrice = addedProduct.price;
       const prodTitle = addedProduct.productName;
-      const prodId = addedProduct.id;
+      const prodId = addedProduct.productID;
       let updatedOrNewCartItem;
 
       // 이미 상품이 담겨있는 경우
       if (state.items[prodId]) {
-        state.items[prodId].quantitty += 1;
+        state.items[prodId].quantitiy += 1;
         return {
           ...state,
           items: { ...state.items },
@@ -26,10 +32,11 @@ export default CartReducer = (state = initialState, action) => {
       } else {
         state.items[prodId];
         updatedOrNewCartItem = {
-          prodId: addedProduct.id,
-          prodPrice,
-          prodTitle,
-          quantitty: 1,
+          productID: addedProduct.id,
+          price: prodPrice,
+          productName: prodTitle,
+          quantity: 1,
+          checked: false,
         };
         return {
           ...state,
@@ -38,19 +45,31 @@ export default CartReducer = (state = initialState, action) => {
         };
       }
     case DELETE_CART:
-      const deleteProduct = action.product;
-      const deleteProdId = deleteProduct.id;
-      const deleteProdPrice = deleteProduct.price;
-      const newItems = delete { ...state.items }[deleteProdId];
       return {
         ...state,
-        itemes: { newItems },
-        totalAmount: state.totalAmount - deleteProdPrice,
+        //   itemes: { newItems },
+        //   totalAmount: state.totalAmount - deleteProdPrice,
       };
     case CLEAR_CART:
       return {
-        items: {},
-        totalAmount: 0,
+        ...state,
+      };
+
+    case CHECK_ALL:
+      const alls = state.allchecked;
+      for (let i in state.items) {
+        state.items[i].checked = !alls;
+      }
+      return {
+        ...state,
+        allchecked: !state.allchecked,
+      };
+    case CHECK:
+      const checkId = action.productID;
+      const now = state.items[checkId].checked;
+      state.items[checkId].checked = !now;
+      return {
+        ...state,
       };
   }
 

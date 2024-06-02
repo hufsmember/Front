@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components/native";
-import { Image, Text, FlatList } from "react-native";
+import { Image, Text, FlatList, TouchableOpacity } from "react-native";
 import { useFonts, Inter_800ExtraBold } from "@expo-google-fonts/inter";
 import mascort from "../../image/mascort.png";
 import { Feather } from "@expo/vector-icons";
@@ -13,7 +13,13 @@ import DeleteItem from "./DeleteItem";
 import CartItem from "./CartItem";
 import { ScrollView } from "react-native-gesture-handler";
 import CartReducer from "./CartReducer";
-import { ADD_TO_CART, DELETE_CART, CLEAR_CART } from "./CartActions";
+import {
+  ADD_TO_CART,
+  DELETE_CART,
+  CLEAR_CART,
+  CHECK_ALL,
+  CHECK,
+} from "./CartActions";
 
 const All = styled.SafeAreaView`
   align-items: center;
@@ -67,31 +73,31 @@ const Num = styled.View`
   flex-direction: row;
 `;
 
-const PopUp = () => {
-  const [items, dispatch] = useReducer(CartReducer);
-  const [all, setall] = useState(0);
+const PopUp = ({ _onPress }) => {
+  const [items, dispatch] = useReducer(CartReducer, {
+    items: {
+      1: {
+        productID: 1,
+        productName: "제주 1등급 삼겹살 300g(냉장)",
+        image: "url",
+        price: 12000,
+        quantity: 1,
+        checked: false,
+      },
+      2: {
+        productID: 2,
+        productName: "제주 1등급 삼겹살 300g(냉장)",
+        image: "url",
+        price: 12000,
+        quantity: 1,
+        checked: false,
+      },
+    },
+    totalAmount: 0,
+    allchecked: false,
+  });
+  const [num, setnum] = useState(0);
   const [allcheck, setallcheck] = useState(false);
-  useEffect(() => {
-    if (all == sampleData.length) {
-      setallcheck(true);
-    }
-  }, all);
-  const sampleData = [
-    {
-      productID: 1,
-      productName: "제주 1등급 삼겹살 300g(냉장)",
-      image: "url",
-      price: 12000,
-      quantity: 1,
-    },
-    {
-      productID: 2,
-      productName: "제주 1등급 삼겹살 300g(냉장)",
-      image: "url",
-      price: 12000,
-      quantity: 1,
-    },
-  ];
   function handleAddItem(item) {
     dispatch({
       product: item,
@@ -111,24 +117,33 @@ const PopUp = () => {
       product: item,
       type: CLEAR_CART,
     });
-    setall(!all);
   }
+
+  function handleAlls() {
+    dispatch({
+      type: CHECK_ALL,
+    });
+  }
+  function handleChecked(productID) {
+    dispatch({
+      type: CHECK,
+      productID: productID,
+    });
+  }
+
   const renderItem = ({ item }) => {
     return (
       <CartItem
         name={item.productName}
         price={item.price}
-        _onPress={(checked) => {
-          if (checked) {
-            setall(all + 1);
-          } else {
-            setall(all - 1);
-          }
+        _onPress={() => {
+          handleChecked(item.productID);
         }}
-        alls={allcheck}
+        tchecked={item.checked}
       ></CartItem>
     );
   };
+
   const insets = useSafeAreaInsets();
   const [fontsLoaded] = useFonts({
     Inter: require("../../assets/fonts/Inter-SemiBold.ttf"),
@@ -139,54 +154,50 @@ const PopUp = () => {
     return null;
   } else {
     return (
-      <All
-        style={{
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-        }}
-      >
-        <Container>
-          <Header>
-            <Title>홍길동님!{"\n"}그로시가 미리 장을 봐두었어요!</Title>
-            <Image source={mascort}></Image>
-          </Header>
-          <Check>
-            <Text style={{ fontSize: 11.5, fontFamily: "Inter" }}>
-              식단구성 확인하기
-            </Text>
-            <Feather name="chevron-right" size={17} color="black" />
-          </Check>
-          <Head>
-            <AllCheck>
-              <CheckButton
-                _onPress={() => {
-                  setallcheck(!allcheck);
-                  if (allcheck) {
-                    setall(sampleData.length);
-                  } else {
-                    setall(0);
-                  }
-                }}
-                alls={allcheck}
-              ></CheckButton>
-              <Num>
-                <Text>전체선택</Text>
-                <Text>
-                  ({all}/{sampleData.length})
-                </Text>
-              </Num>
-            </AllCheck>
-            <DeleteItem></DeleteItem>
-          </Head>
-          <FlatList
-            style={{ width: "100%" }}
-            data={sampleData}
-            renderItem={renderItem}
-          />
-        </Container>
-      </All>
+      <TouchableOpacity onPress={_onPress}>
+        <All
+          style={{
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
+          }}
+        >
+          <Container>
+            <Header>
+              <Title>홍길동님!{"\n"}그로시가 미리 장을 봐두었어요!</Title>
+              <Image source={mascort}></Image>
+            </Header>
+            <Check>
+              <Text style={{ fontSize: 11.5, fontFamily: "Inter" }}>
+                식단구성 확인하기
+              </Text>
+              <Feather name="chevron-right" size={17} color="black" />
+            </Check>
+            <Head>
+              <AllCheck>
+                <CheckButton
+                  _onPress={() => {
+                    handleAlls();
+                  }}
+                  tchecked={items.allchecked}
+                ></CheckButton>
+                <Num>
+                  <Text>전체선택</Text>
+                  <Text>({num})</Text>
+                </Num>
+              </AllCheck>
+              <DeleteItem></DeleteItem>
+            </Head>
+            <FlatList
+              style={{ width: "100%" }}
+              data={Object.values(items.items)}
+              renderItem={renderItem}
+              extraData={items.allchecked}
+            />
+          </Container>
+        </All>
+      </TouchableOpacity>
     );
   }
 };

@@ -7,7 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "react-slick";
 import { Ionicons } from "@expo/vector-icons";
 import PopUp from "../components/Pop-up";
-
+import ShopTab from "./ShopTab";
 import {
   TouchableOpacity,
   View,
@@ -43,7 +43,7 @@ const ShopStack = () => {
         },
       }}
     >
-      <Stack.Screen name="PopUp" component={PopUp} />
+      <Stack.Screen name="Shop" component={ShopTab} />
     </Stack.Navigator>
   );
 };

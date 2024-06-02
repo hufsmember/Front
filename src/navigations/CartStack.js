@@ -13,6 +13,9 @@ const CartStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
+        headerStyle: {
+          backgroundColor: "#F5F5F5",
+        },
       }}
     >
       <Stack.Screen
@@ -33,7 +36,7 @@ const CartStack = () => {
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    gap: 10,
+                    gap: 150,
                   }}
                 >
                   <AntDesign name="close" size={18} color="black" />
@@ -41,7 +44,7 @@ const CartStack = () => {
                     style={{
                       fontFamily: "Inter",
                       fontSize: 16,
-                      paddingLeft: 20,
+                      width: "100%",
                     }}
                   >
                     장바구니

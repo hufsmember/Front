@@ -22,6 +22,7 @@ const Container = styled.View`
   height: 101px;
   flex-direction: row;
   gap: 13px;
+  background-color: white;
 `;
 const Title = styled.Text`
   font-family: Inter;
@@ -59,7 +60,7 @@ const Wrapper = styled.View`
 `;
 
 const Out = styled.TouchableOpacity``;
-const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
+const WCartItem = ({ name, price, _onPress, temp, tchecked }) => {
   const [checked, setchecked] = useState(false);
   const [fontsLoaded] = useFonts({
     Inter: require("../../assets/fonts/Inter-SemiBold.ttf"),
@@ -80,7 +81,9 @@ const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
           <Body>
             <ItemImage source={Pork}></ItemImage>
             <Counts>
-              <Price>{price} 원</Price>
+              <Price>
+                {price} {String(temp)}원
+              </Price>
               <CountButton></CountButton>
             </Counts>
           </Body>
@@ -93,4 +96,4 @@ const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
   }
 };
 
-export default CartItem;
+export default WCartItem;
