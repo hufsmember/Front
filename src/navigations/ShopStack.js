@@ -43,7 +43,7 @@ const ShopStack = () => {
         },
       }}
     >
-      <Stack.Screen name="Shop" component={ShopTab} />
+      <Stack.Screen name="Shop" component={Shop} />
     </Stack.Navigator>
   );
 };
