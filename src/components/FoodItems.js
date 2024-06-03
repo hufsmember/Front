@@ -3,6 +3,8 @@ import { TouchableOpacity, View, Text } from "react-native";
 import styled from "styled-components/native";
 import Item from "./Item";
 import { ItemIcons } from "./ItemIcons";
+import axios from "axios";
+import GetAccessToken from "../API/GetAccessToken";
 
 const Container = styled.View`
   flex: 1;
@@ -25,16 +27,26 @@ const tempList = [
 ];
 
 const FoodItems = ({ navigation }) => {
-  // const [item, setItem] = useState(null);
-  // const GetItem = async () => {
-  //   try {
-  //     const response = await axios.get("https://example.com/data");
-  //     setItem(response.data);
-  //   } catch (error) {
-  //     console.error("에러발생", error);
-  //   }
-  // };
-  // useEffect(GetItem());
+  const [item, setItem] = useState(null);
+  const GetItem = async () => {
+    try {
+      const response = await axios.get(
+        "http://43.200.170.84/fridge/content/FROZEN/ingredients/1/list",
+        {
+          headers: {
+            accesstoken: GetAccessToken(),
+          },
+        }
+      );
+      setItem(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("에러발생", error);
+    }
+  };
+  useEffect(() => {
+    GetItem();
+  }, []);
   return (
     <Container>
       <OneList>
