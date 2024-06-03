@@ -12,7 +12,14 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLogin } from '../contexts/LoginContext';
+
+
 AntDesign.loadFont();
+
+
 
 const Container = styled.View`
   flex: 1;
@@ -62,6 +69,18 @@ const MyFamily = styled.TouchableOpacity`
 
 export default function Home({ navigation }) {
   const insets = useSafeAreaInsets();
+
+  const { setIsLoggedIn } = useLogin();
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('accessToken');
+      setIsLoggedIn(false); // 로그아웃 시 로그인 상태를 false로 변경
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
+
   return (
     <Container
       style={{
@@ -87,6 +106,7 @@ export default function Home({ navigation }) {
         <Sub>냉장고를 클릭하시면 더 자세히 내용물을 확인하 실수 있습니다.</Sub>
       </Body>
       <StatusBar style="auto" />
+      <Button title="Logout" onPress={handleLogout} />
     </Container>
   );
 }
