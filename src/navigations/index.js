@@ -1,20 +1,17 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import TabNav from "./Tab";
+import AuthStack from "./AuthStack";
 import StackNav from "./Stack";
-import { StatusBar } from "expo-status-bar";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useLogin } from "../contexts/LoginContext";
+
 const Navigation = () => {
-  return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <TabNav />
-      </NavigationContainer>
-    </SafeAreaProvider>
-  );
+    const { isLoggedIn } = useLogin();
+
+    return (
+        <NavigationContainer>
+            {isLoggedIn ? <StackNav /> : <AuthStack />}
+        </NavigationContainer>
+    );
 };
 
 export default Navigation;
