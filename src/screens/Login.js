@@ -1,13 +1,12 @@
-import React, { useState, useRef } from "react";
-import styled from "styled-components/native";
-import { Image, Input, Button } from "../components";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { validateEmail, removeWhitespace } from "../utils/commmon";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import axiosInstance from "../utils/axiosInstance";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLogin } from "../contexts/LoginContext";
-import GetAccessToken from "../API/GetAccessToken";
+import React, { useState, useRef } from 'react';
+import styled from 'styled-components/native';
+import { Image, Input, Button } from '../components';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { validateEmail, removeWhitespace } from '../utils/commmon';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import axiosInstance from '../utils/axiosInstance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLogin } from '../contexts/LoginContext'
 
 const Container = styled.View`
   flex: 1;
@@ -27,55 +26,50 @@ const ErrorText = styled.Text`
 `;
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const passwordRef = useRef();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const insets = useSafeAreaInsets();
   const { setIsLoggedIn } = useLogin();
 
   const _handleLoginButtonPress = async () => {
     try {
-      console.log("Email:", email);
-      console.log("Password:", password);
+      console.log('Email:', email);
+      console.log('Password:', password);
 
-      const response = await axiosInstance.post("/members/login", {
-        email,
-        password,
-      });
-      console.log("서버 응답 데이터:", response.data);
+      const response = await axiosInstance.post('/members/login', { email, password });
+      console.log('서버 응답 데이터:', response.data);
 
-      const accessToken = response.headers["accesstoken"];
-      GetAccessToken(accessToken);
+      const accessToken = response.headers['accesstoken'];
+
       if (accessToken) {
-        await AsyncStorage.setItem("accessToken", accessToken);
+        await AsyncStorage.setItem('accessToken', accessToken);
         setIsLoggedIn(true);
       } else {
-        setErrorMessage("로그인 실패: 액세스 토큰이 없습니다.");
+        setErrorMessage('로그인 실패: 액세스 토큰이 없습니다.');
       }
     } catch (error) {
-      console.error("로그인 에러:", error.response || error.message || error);
-      const message =
-        error.response?.data?.message ||
-        "로그인에 실패했습니다. 다시 시도해주세요.";
+      console.error('로그인 에러:', error.response || error.message || error);
+      const message = error.response?.data?.message || '로그인에 실패했습니다. 다시 시도해주세요.';
       setErrorMessage(message);
       if (error.response) {
-        console.error("응답 데이터:", error.response.data);
-        console.error("응답 상태:", error.response.status);
-        console.error("응답 헤더:", error.response.headers);
+        console.error('응답 데이터:', error.response.data);
+        console.error('응답 상태:', error.response.status);
+        console.error('응답 헤더:', error.response.headers);
       }
     }
   };
 
-  const _handleEmailChange = (email) => {
+  const _handleEmailChange = email => {
     const changedEmail = removeWhitespace(email);
     setEmail(changedEmail);
     setErrorMessage(
-      validateEmail(changedEmail) ? "" : "이메일을 확인해주세요."
+      validateEmail(changedEmail) ? '' : '이메일을 확인해주세요.'
     );
   };
 
-  const _handlePasswordChange = (password) => {
+  const _handlePasswordChange = password => {
     setPassword(removeWhitespace(password));
   };
 
@@ -108,7 +102,7 @@ const Login = ({ navigation }) => {
         <Button title="로그인" onPress={_handleLoginButtonPress} />
         <Button
           title="회원가입"
-          onPress={() => navigation.navigate("FamilyType")}
+          onPress={() => navigation.navigate('FamilyType')}
           isFilled={false}
         />
       </Container>

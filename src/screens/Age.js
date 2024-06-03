@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled, { useTheme } from "styled-components/native";
 import axiosInstance from "../utils/axiosInstance";
 import { Button, AgeButton } from "../components";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled.View`
     flex: 1;
@@ -37,11 +38,11 @@ const SingleButtonContainer = styled.View`
     margin-bottom: 20px; // 추가된 부분: 버튼 간의 간격을 벌립니다.
 `;
 
-const Age = ({ navigation, route }) => {
+const Age = ({ navigation }) => {
     const theme = useTheme();
     const [selectedAgeGroup, setSelectedAgeGroup] = useState(null);
 
-    const accessToken = route.params.accessToken;
+    
 
     const handleAgeSelect = (ageGroup) => {
         setSelectedAgeGroup(ageGroup);
@@ -50,8 +51,15 @@ const Age = ({ navigation, route }) => {
     const handleNextButtonPress = async () => {
         if (selectedAgeGroup) {
             try {
-                await axiosInstance.post('/members/age-group', { ageGroup: selectedAgeGroup });
-                navigation.navigate('Allergy', { accessToken });
+                const token = await AsyncStorage.getItem('accessToken');
+                await axiosInstance.post('/members/age-group', { ageGroup: selectedAgeGroup },
+                {
+                    headers: {
+                        'accessToken': `${token}`
+                    }
+                }
+                );
+                navigation.navigate('Allergy');
             } catch (error) {
                 console.error("연령대 데이터를 전송하는 데 실패했습니다", error);
             }
