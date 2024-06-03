@@ -1,4 +1,3 @@
-// axiosInstance.js
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,7 +9,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     if (accessToken) {
-      config.headers.Authorization = `${accessToken}`;
+      config.headers['accessToken'] = accessToken;
     }
     return config;
   },
