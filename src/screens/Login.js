@@ -7,7 +7,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import axiosInstance from "../utils/axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLogin } from "../contexts/LoginContext";
-import GetAccessToken from "../API/GetAccessToken";
 
 const Container = styled.View`
   flex: 1;
@@ -46,7 +45,6 @@ const Login = ({ navigation }) => {
       console.log("서버 응답 데이터:", response.data);
 
       const accessToken = response.headers["accesstoken"];
-      GetAccessToken(accessToken);
       if (accessToken) {
         await AsyncStorage.setItem("accessToken", accessToken);
         setIsLoggedIn(true);

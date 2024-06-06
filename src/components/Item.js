@@ -31,7 +31,7 @@ const OneItem = styled.TouchableOpacity`
   align-items: center;
 `;
 
-const Item = ({ navigatefrom, foodimage, foodname }) => {
+const Item = ({ navigatefrom, foodimage, foodname, temp }) => {
   return (
     <Container>
       <OneItem

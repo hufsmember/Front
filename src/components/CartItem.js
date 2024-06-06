@@ -20,8 +20,8 @@ import Pork from "../../image/image.png";
 const Container = styled.View`
   width: 100%;
   height: 101px;
-  flex-direction: row;
-  gap: 13px;
+  flex-direction: column;
+  gap: 5px;
 `;
 const Title = styled.Text`
   font-family: Inter;
@@ -42,6 +42,7 @@ const Body = styled.View`
   flex-direction: row;
   gap: 13px;
   align-items: center;
+  padding-left: 25px;
 `;
 
 const Counts = styled.View`
@@ -51,6 +52,10 @@ const Counts = styled.View`
 const Head = styled.View`
   flex-direction: row;
   gap: 17px;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 5px;
+  padding-left: 10px;
 `;
 
 const Wrapper = styled.View`
@@ -72,22 +77,23 @@ const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
   } else {
     return (
       <Container>
-        <CheckButton _onPress={_onPress} tchecked={tchecked}></CheckButton>
-        <Wrapper>
-          <Head>
+        <Head>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <CheckButton _onPress={_onPress} tchecked={tchecked}></CheckButton>
             <Title>{name}</Title>
-          </Head>
-          <Body>
-            <ItemImage source={Pork}></ItemImage>
-            <Counts>
-              <Price>{price} 원</Price>
-              <CountButton></CountButton>
-            </Counts>
-          </Body>
-        </Wrapper>
-        <Out>
-          <AntDesign name="close" size={18} color="black" />
-        </Out>
+          </View>
+          <Out>
+            <AntDesign name="close" size={18} color="black" />
+          </Out>
+        </Head>
+
+        <Body>
+          <ItemImage source={Pork}></ItemImage>
+          <Counts>
+            <Price>{price} 원</Price>
+            <CountButton></CountButton>
+          </Counts>
+        </Body>
       </Container>
     );
   }
