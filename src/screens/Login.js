@@ -6,7 +6,7 @@ import { validateEmail, removeWhitespace } from '../utils/commmon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import axiosInstance from '../utils/axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useLogin } from '../contexts/LoginContext'
+import { useLogin } from '../contexts/LoginContext';
 
 const Container = styled.View`
   flex: 1;

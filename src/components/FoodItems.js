@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import Item from "./Item";
 import { ItemIcons } from "./ItemIcons";
 import axios from "axios";
-import GetAccessToken from "../API/GetAccessToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Container = styled.View`
   flex: 1;
@@ -27,33 +27,69 @@ const tempList = [
 ];
 
 const FoodItems = ({ navigation }) => {
-  const [item, setItem] = useState(null);
-  const GetItem = async () => {
-    try {
-      const response = await axios.get(
-        "http://43.200.170.84/fridge/content/FROZEN/ingredients/1/list",
-        {
-          headers: {
-            accesstoken: GetAccessToken(),
-          },
-        }
-      );
-      setItem(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("에러발생", error);
-    }
+  const [item, setItem] = useState([]);
+  // const getItem = async () => {
+  //   const token = await AsyncStorage.getItem("accessToken");
+  //   await axios
+  //     .get("http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list", {
+  //       headers: {
+  //         accesstoken: token,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setItem(response.data);
+  //       console.log(item);
+  //     });
+  // }
+  // const token = await AsyncStorage.getItem("accessToken");
+  // useEffect(() => {
+  //   // const token = AsyncStorage.getItem("accessToken");
+  //   axios
+  //     .get("http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list", {
+  //       headers: {
+  //         accesstoken: AsyncStorage.getItem("accessToken"),
+  //       },
+  //     })
+  //     .then(({ response }) => {
+  //       console.log(response);
+  //       // setItem(response.data);
+  //       // console.log(item);
+  //       // console.log("시발");
+  //     });
+  // }, []);
+  const getItem = async () => {
+    const token = await AsyncStorage.getItem("accessToken");
+    const response = await axios.get(
+      "http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list",
+      {
+        headers: {
+          accesstoken: token,
+        },
+      }
+    );
+    setItem(response.data.data.foods[0]);
+    const fName = response.data.data.foods[0].foodName;
+    const fUrl = response.data.data.foods[0].imageUrl;
+    console.log("시발");
+    console.log(response.data.data.foods[0].imageUrl);
   };
+
   useEffect(() => {
-    GetItem();
+    getItem();
   }, []);
+
+  // useEffect(() => {
+  //   setItem(GetItem());
+  // }, []);
+
   return (
     <Container>
       <OneList>
         <Item
           navigatefrom={navigation}
-          foodimage={ItemIcons.pumpkin}
-          foodname="단호박"
+          foodimage={item.imageUrl}
+          foodname={item.foodName}
+          temp={item.imageUrl}
         />
         <Item
           navigatefrom={navigation}

@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { Home, MainOpen, Shop, Cart } from "../screens";
-import Logo from "../../assets/logo.png";
+import Logo from "../../image/Grocey.png";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "react-slick";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,7 +23,9 @@ const ShopStack = () => {
       screenOptions={{
         headerShown: true,
         headerTitle: () => {
-          return <Image source={Logo} />;
+          return (
+            <Image source={Logo} style={{ objectFit: "contain", width: 200 }} />
+          );
         },
         headerTitleAlign: "center",
         cardStyle: {

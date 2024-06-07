@@ -10,7 +10,7 @@ import { useFonts, Inter_800ExtraBold } from "@expo-google-fonts/inter";
 const Container = styled.ScrollView`
   background-color: #f5f5f5;
   width: 100%;
-  height: 100%;
+  height: 80%;
   gap: 43px;
 `;
 const Head = styled.View`
