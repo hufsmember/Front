@@ -60,7 +60,7 @@ const FoodItems = ({ navigation }) => {
   const getItem = async () => {
     const token = await AsyncStorage.getItem("accessToken");
     const response = await axios.get(
-      "http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list",
+      "http://13.124.4.131/fridge/content/1/ingredients/FROZEN/list",
       {
         headers: {
           accesstoken: token,
