@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { validateEmail, removeWhitespace } from "../utils/commmon";
 import { Input, Button } from "../components";
 import axiosInstance from "../utils/axiosInstance";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled.View`
     flex: 1;
@@ -81,16 +82,36 @@ const Signup = ({ navigation, route }) => { // route 추가
                 // 액세스 토큰을 받아옵니다.
                 const accessToken = response.headers['accesstoken'];
     
-                // 다음 페이지로 이동할 때 액세스 토큰을 params로 함께 전달합니다.
-                navigation.navigate('Gender', { accessToken });
+                // 액세스 토큰을 AsyncStorage에 저장합니다.
+                if (accessToken) {
+                    await AsyncStorage.setItem('accessToken', accessToken);
+                    console.log('Access Token:', accessToken);
+    
+                    // 다음 페이지로 이동
+                    navigation.navigate('Gender');
+                } else {
+                    console.error('Access token is missing in the response.');
+                }
             } catch (error) {
                 console.error('Error:', error);
-                // 오류 처리
+                if (error.response) {
+                    console.error("응답 데이터:", error.response.data);
+                    console.error("응답 상태:", error.response.status);
+                    console.error("응답 헤더:", error.response.headers);
+                } else if (error.request) {
+                    console.error("요청 데이터:", error.request);
+                } else {
+                    console.error("에러 메시지:", error.message);
+                }
             }
         } else {
             console.log("Please fill in all required fields correctly.");
         }
     };
+    
+    
+    
+    
 
     return (
         <KeyboardAwareScrollView extraScrollHeight={20}>

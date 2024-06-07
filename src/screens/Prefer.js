@@ -3,6 +3,7 @@ import styled, { useTheme } from "styled-components/native";
 import { ScrollView } from "react-native";
 import { Button, TextButton } from "../components";
 import axiosInstance from "../utils/axiosInstance";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled.View`
   flex: 1;
@@ -25,15 +26,14 @@ const ButtonContainer = styled.View`
   margin-bottom: 10px; 
 `;
 
-const Prefer = ({ navigation, route }) => {
+const Prefer = ({ navigation }) => {
   const theme = useTheme(); 
   const [preferredCuisine, setPreferredCuisine] = useState(null);
   const [nonPreferredCuisine, setNonPreferredCuisine] = useState(null);
   const [preferredIngredient, setPreferredIngredient] = useState(null);
   const [nonPreferredIngredient, setNonPreferredIngredient] = useState(null);
 
-  const accessToken = route.params.accessToken;
-
+ 
   const handleNextButtonPress = async () => {
     const data = {
       preferredCuisine,
@@ -43,10 +43,15 @@ const Prefer = ({ navigation, route }) => {
     };
 
     try {
-      const response = await axiosInstance.post('/members/preferred', data);
+      const token = await AsyncStorage.getItem('accessToken');
+      const response = await axiosInstance.post('/members/preferred', data,{
+        headers: {
+          'accessToken': `${token}`
+      }
+      });
       console.log(response.data); // 서버로부터의 응답을 출력합니다.
       // 회원가입 페이지로 이동하는 코드는 여기에 추가하세요.
-      navigation.navigate('Age', { accessToken });
+      navigation.navigate('Login');
     } catch (error) {
       console.error("Error:", error);
       Alert.alert("Error", "서버로 데이터를 전송하는 중 오류가 발생했습니다.");

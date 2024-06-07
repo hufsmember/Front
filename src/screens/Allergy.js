@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled, { useTheme } from "styled-components/native";
 import { Button, AgeButton, RoundButton } from "../components";
 import axiosInstance from "../utils/axiosInstance";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled.View`
     flex: 1;
@@ -31,10 +32,10 @@ const SingleButtonContainer = styled.View`
     margin-top: 50px; // 추가된 부분: 버튼 간의 간격을 벌립니다.
 `;
 
-const Allergy = ({ navigation, route }) => {
+const Allergy = ({ navigation }) => {
     const theme = useTheme();
 
-    const accessToken = route.params.accessToken;
+    
 
     // 비건 여부를 저장하는 상태
     const [isVegan, setIsVegan] = useState(null);
@@ -59,14 +60,19 @@ const Allergy = ({ navigation, route }) => {
     // 다음 버튼 클릭 시
     const handleNextButtonPress = async () => {
         const data = {
-            isVegan: isVegan,
-            allergyType: selectedAllergies
+            IsVegan: isVegan,
+            allergiesName: selectedAllergies
         };
         try {
             // axios를 사용하여 서버로 데이터를 전송합니다.
-            await axiosInstance.post('/members/vegan/allergies/type', data);
+            const token = await AsyncStorage.getItem('accessToken');
+            await axiosInstance.post('/members/vegan/allergies/type', data, {
+                headers: {
+                    'accessToken': `${token}`
+                }
+            });
             console.log("데이터 전송 성공:", data);
-            navigation.navigate('Prefer', { accessToken });
+            navigation.navigate('Prefer');
         } catch (error) {
             console.error("데이터 전송 실패:", error);
         }
