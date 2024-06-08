@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from "react";
 import { StatusBar, Image } from "react-native";
 import * as SplashScreen from 'expo-splash-screen';
@@ -8,9 +9,14 @@ import { theme } from "./theme";
 import Navigation from "./navigations";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginProvider } from "./contexts/LoginContext";
+import { LogBox } from 'react-native';
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
+
+// Ignore all logs
+LogBox.ignoreAllLogs();
+console.warn = () => {}; // Ignore warnings
 
 const cacheImages = (images) => {
     return images.map((image) => {
