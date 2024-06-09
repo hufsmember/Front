@@ -1,107 +1,76 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { FlatList, Text } from "react-native";
 import styled from "styled-components/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axiosInstance from "../utils/axiosInstance";
 import Item from "./Item";
-import { ItemIcons } from "./ItemIcons";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Container = styled.View`
   flex: 1;
+  width: 100%;
 `;
 
 const OneList = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
+  margin: 20px;
 `;
 
-const tempList = [
-  {
-    foodName: "단호박",
-    image: "url",
-  },
-  {
-    foodName: "새우",
-    image: "url",
-  },
-];
+
 
 const FoodItems = ({ navigation }) => {
-  const [item, setItem] = useState([]);
-  // const getItem = async () => {
-  //   const token = await AsyncStorage.getItem("accessToken");
-  //   await axios
-  //     .get("http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list", {
-  //       headers: {
-  //         accesstoken: token,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setItem(response.data);
-  //       console.log(item);
-  //     });
-  // }
-  // const token = await AsyncStorage.getItem("accessToken");
-  // useEffect(() => {
-  //   // const token = AsyncStorage.getItem("accessToken");
-  //   axios
-  //     .get("http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list", {
-  //       headers: {
-  //         accesstoken: AsyncStorage.getItem("accessToken"),
-  //       },
-  //     })
-  //     .then(({ response }) => {
-  //       console.log(response);
-  //       // setItem(response.data);
-  //       // console.log(item);
-  //       // console.log("시발");
-  //     });
-  // }, []);
-  const getItem = async () => {
-    const token = await AsyncStorage.getItem("accessToken");
-    const response = await axios.get(
-      "http://43.200.170.84/fridge/content/1/ingredients/FROZEN/list",
-      {
+  const [foodList, setFoodList] = useState([]);
+
+  const getFoodList = async () => {
+    try {
+      const token = await AsyncStorage.getItem('accessToken');
+      console.log('AccessToken:', token); // 토큰 확인
+      const response = await axiosInstance.get("/fridge/content/1/ingredients/REFRIGERATED/list", {
         headers: {
-          accesstoken: token,
-        },
+          'accessToken': `${token}` // accessToken 헤더 사용
+        }
+      });
+      console.log('API Response:', response.data); // 응답 데이터 확인
+      console.log('Foods:', response.data.data.foods); // foods 배열 확인
+      setFoodList(response.data.data.foods); // 데이터 설정
+    } catch (error) {
+      console.error("에러발생", error.message);
+      if (error.response) {
+        // 서버가 응답을 반환했지만, status가 2xx가 아님
+        console.error("응답 데이터:", error.response.data);
+        console.error("응답 상태:", error.response.status);
+        console.error("응답 헤더:", error.response.headers);
+      } else if (error.request) {
+        // 요청이 만들어졌지만, 응답을 받지 못함
+        console.error("요청 데이터:", error.request);
+      } else {
+        // 요청을 만들 때, 다른 오류 발생
+        console.error("에러 메시지:", error.message);
       }
-    );
-    setItem(response.data.data.foods[0]);
-    const fName = response.data.data.foods[0].foodName;
-    const fUrl = response.data.data.foods[0].imageUrl;
-    console.log("시발");
-    console.log(response.data.data.foods[0].imageUrl);
+    }
   };
 
   useEffect(() => {
-    getItem();
+    getFoodList();
   }, []);
-
-  // useEffect(() => {
-  //   setItem(GetItem());
-  // }, []);
 
   return (
     <Container>
-      <OneList>
-        <Item
-          navigatefrom={navigation}
-          foodimage={item.imageUrl}
-          foodname={item.foodName}
-          temp={item.imageUrl}
-        />
-        <Item
-          navigatefrom={navigation}
-          foodimage={ItemIcons.shrimp}
-          foodname="새우"
-        />
-        <Item
-          navigatefrom={navigation}
-          foodimage={ItemIcons.squid}
-          foodname="오징어"
-        />
-      </OneList>
+      <FlatList
+        data={foodList}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal = {true}
+        renderItem={({ item }) => (
+          <OneList>
+            <Item
+              navigatefrom={navigation}
+              foodimage={{ uri: item.imageUrl }}
+              foodname={item.foodName}
+            />
+          </OneList>
+        )}
+        ListEmptyComponent={<Text>No data available</Text>} 
+      />
     </Container>
   );
 };
