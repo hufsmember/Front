@@ -64,7 +64,7 @@ const Wrapper = styled.View`
 `;
 
 const Out = styled.TouchableOpacity``;
-const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
+const CartItem = ({ name, price, _onPress, temp, tchecked, imageUrl }) => {
   const [checked, setchecked] = useState(false);
   const [fontsLoaded] = useFonts({
     Inter: require("../../assets/fonts/Inter-SemiBold.ttf"),
@@ -88,7 +88,7 @@ const CartItem = ({ name, price, _onPress, temp, tchecked }) => {
         </Head>
 
         <Body>
-          <ItemImage source={Pork}></ItemImage>
+          <ItemImage source={{ uri: imageUrl }}></ItemImage>
           <Counts>
             <Price>{price} 원</Price>
             <CountButton></CountButton>
