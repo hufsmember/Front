@@ -101,7 +101,7 @@ const CookBook = ({ navigation }) => {
                   </View>
                 ))
               ) : (
-                <Text>추천 레시피가 없습니다.</Text>
+                <Text>레시피 로딩중</Text>
               )}
             </FoodList>
           </ListWrapper>
@@ -120,7 +120,7 @@ const CookBook = ({ navigation }) => {
                   </View>
                 ))
               ) : (
-                <Text>추천 레시피가 없습니다.</Text>
+                <Text>레시피 로딩중</Text>
               )}
             </FoodList>
           </ListWrapper>
