@@ -1,29 +1,15 @@
-import React, { useState, useReducer, useEffect } from "react";
-import styled, { ThemeProvider } from "styled-components/native";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components/native";
 import { View, Image, Text, FlatList, TouchableOpacity } from "react-native";
-import { useFonts, Inter_800ExtraBold } from "@expo-google-fonts/inter";
+import { useFonts } from "@expo-google-fonts/inter";
 import mascort from "../../image/mascort.png";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CheckButton from "./CheckButton";
 import DeleteItem from "./DeleteItem";
 import CartItem from "./CartItem";
-import { ScrollView } from "react-native-gesture-handler";
-import CartReducer from "./CartReducer";
-import BuyButton from "../components/BuyButton";
-import {
-  ADD_TO_CART,
-  DELETE_CART,
-  CLEAR_CART,
-  CHECK_ALL,
-  CHECK,
-} from "./CartActions";
-
-import Receipt from "./Receipt";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axiosInstance from '../utils/axiosInstance';
 
 const All = styled.ScrollView`
   border-radius: 10px;
@@ -53,7 +39,6 @@ const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* width: 100%; */
   padding-right: 10px;
   padding-left: 10px;
 `;
@@ -62,34 +47,9 @@ const Check = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  /* width: 100%; */
   padding-left: 7px;
 `;
 
-const List = styled.View`
-  border-color: #000000;
-  border-top-width: 1;
-  width: 100%;
-  flex-direction: column;
-`;
-
-const AllCheck = styled.View`
-  font-family: Inter;
-  font-size: 13.217px;
-  flex-direction: row;
-  gap: 19px;
-  padding-right: 10px;
-`;
-const Head = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-right: 10px;
-  padding-left: 10px;
-`;
-const Num = styled.View`
-  flex-direction: row;
-`;
 const Line = styled.View`
   width: 100%;
   height: 1px;
@@ -97,62 +57,48 @@ const Line = styled.View`
 `;
 
 const PopUp = ({ _onPress }) => {
-  const [items, dispatch] = useReducer(CartReducer, {
-    items: {
-      1: {
-        productID: 1,
-        productName: "제주 1등급 삼겹살 300g(냉장)",
-        image: "url",
-        price: 12000,
-        quantity: 1,
-        checked: false,
-      },
-      2: {
-        productID: 2,
-        productName: "제주 1등급 삼겹살 300g(냉장)",
-        image: "url",
-        price: 12000,
-        quantity: 1,
-        checked: false,
-      },
-    },
-    totalAmount: 0,
+  const [products, setProducts] = useState([]);
+  const [items, setItems] = useState({
     allchecked: false,
   });
-  const [num, setnum] = useState(0);
-  const [allcheck, setallcheck] = useState(false);
-  function handleAddItem(item) {
-    dispatch({
-      product: item,
-      type: ADD_TO_CART,
-    });
-  }
 
-  function handleDeleteItem(item) {
-    dispatch({
-      product: item,
-      type: DELETE_CART,
-    });
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const response = await axiosInstance.get("/products/detail", {
+          headers: {
+            'accessToken': `${token}`
+          }
+        });
+        setProducts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  function handleClearItem(item) {
-    dispatch({
-      product: item,
-      type: CLEAR_CART,
-    });
-  }
+    fetchData();
+  }, []);
 
-  function handleAlls() {
-    dispatch({
-      type: CHECK_ALL,
-    });
-  }
-  function handleChecked(productID) {
-    dispatch({
-      type: CHECK,
-      productID: productID,
-    });
-  }
+  const handleAddItem = (item) => {
+    // Implement your logic for adding an item
+  };
+
+  const handleDeleteItem = (item) => {
+    // Implement your logic for deleting an item
+  };
+
+  const handleClearItem = (item) => {
+    // Implement your logic for clearing an item
+  };
+
+  const handleAlls = () => {
+    // Implement your logic for handling all items
+  };
+
+  const handleChecked = (productID) => {
+    // Implement your logic for handling checked items
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -162,10 +108,12 @@ const PopUp = ({ _onPress }) => {
           price={item.price}
           _onPress={() => {
             handleChecked(item.productID);
+          
           }}
+          imageUrl={item.imageUrl}
           tchecked={item.checked}
-        ></CartItem>
-        <Line></Line>
+        />
+        <Line />
       </View>
     );
   };
@@ -202,7 +150,7 @@ const PopUp = ({ _onPress }) => {
             </TouchableOpacity>
             <Header>
               <Title>홍길동님!{"\n"}그로시가 미리 장을 봐두었어요!</Title>
-              <Image source={mascort}></Image>
+              <Image source={mascort} />
             </Header>
             <Check>
               <Text style={{ fontSize: 11.5, fontFamily: "Inter" }}>
@@ -211,7 +159,7 @@ const PopUp = ({ _onPress }) => {
               <Feather name="chevron-right" size={17} color="black" />
             </Check>
           </View>
-          <Line></Line>
+          <Line />
           <View
             style={{
               width: "100%",
@@ -219,29 +167,30 @@ const PopUp = ({ _onPress }) => {
               gap: 40,
             }}
           >
-            <Head>
-              <AllCheck>
-                <CheckButton
-                  _onPress={() => {
-                    handleAlls();
-                  }}
-                  tchecked={items.allchecked}
-                ></CheckButton>
-                <Num>
-                  <Text style={{ fontFamily: "InterB" }}>전체선택</Text>
-                  <Text style={{ fontFamily: "Inter" }}>({num})</Text>
-                </Num>
-              </AllCheck>
-              <DeleteItem></DeleteItem>
-            </Head>
-            <FlatList
-              data={Object.values(items.items)}
-              renderItem={renderItem}
-              extraData={items.allchecked}
-            />
+            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 10 }}>
+              <CheckButton
+                _onPress={() => {
+                  handleAlls();
+                }}
+                tchecked={items.allchecked}
+              />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ fontFamily: "InterB" }}>전체선택</Text>
+                <Text style={{ fontFamily: "Inter" }}>({products.length})</Text>
+              </View>
+              <DeleteItem />
+            </View>
+            {products.length > 0 ? (
+              <FlatList
+                data={products}
+                keyExtractor={(item) => item.productId.toString()}
+                renderItem={renderItem}
+              />
+            ) : (
+              <Text>상품 로딩중.</Text>
+            )}
           </View>
-          <Receipt></Receipt>
-          <BuyButton></BuyButton>
+          
         </Container>
       </All>
     );

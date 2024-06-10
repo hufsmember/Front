@@ -69,7 +69,7 @@ const FoodItems = ({ navigation }) => {
             />
           </OneList>
         )}
-        ListEmptyComponent={<Text>No data available</Text>} 
+        ListEmptyComponent={<Text>냉장고 로딩중</Text>} 
       />
     </Container>
   );
